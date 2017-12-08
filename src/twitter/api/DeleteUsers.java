@@ -41,7 +41,7 @@ public class DeleteUsers extends javax.swing.JFrame {
         this.Email = Email;
         this.Password = password;
         jTextPane1.setText(this.Email+"\n"+this.Password);
-        
+        this.excuteDelete();
     }
     
     public void excuteDelete()
@@ -63,7 +63,6 @@ public class DeleteUsers extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -88,13 +87,6 @@ public class DeleteUsers extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jTextPane1);
 
-        jButton2.setText("بدأ");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -103,10 +95,7 @@ public class DeleteUsers extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
@@ -118,9 +107,7 @@ public class DeleteUsers extends javax.swing.JFrame {
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14))
         );
 
@@ -141,19 +128,6 @@ public class DeleteUsers extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-         //this.jProgressBar1.setValue(50);
-        this.excuteDelete();
-        //jProgressBar1 = new JProgressBar();
-        //jProgressBar1.setIndeterminate(true);
-        
-           // jProgressBar1.setValue(60);
-           
-          
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,8 +189,15 @@ public class DeleteUsers extends javax.swing.JFrame {
         sum = 1;
         mainClass = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[4]/div/div/div[2]/div/div[2]/div[2]/div[2]/div[1]"));
         index = 1;
-        sizeOfUsers = Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[1]/a/span[3]")).getText());
-      // int sizeOfUsers =  Math.max(Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[1]/a/span[3]")).getText()), Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[2]/a/span[3]")).getText()));                                                              ////*[@id="page-container"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[2]/a/span[3]
+        try
+        {
+            sizeOfUsers = Math.max(Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[1]/a/span[3]")).getText()), Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[2]/a/span[3]")).getText()));
+        }
+        catch(Exception ex)
+        {
+            sizeOfUsers = 200;
+        }
+// int sizeOfUsers =  Math.max(Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[1]/a/span[3]")).getText()), Integer.parseInt(open.findElement(By.xpath("//*[@id=\"page-container\"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[2]/a/span[3]")).getText()));                                                              ////*[@id="page-container"]/div[3]/div/div[2]/div[2]/div/div[2]/div/div/ul/li[2]/a/span[3]
        System.out.println(sizeOfUsers);
        int xo =0;
          for(int i = 1 ; i < sizeOfUsers ; i ++)
@@ -231,10 +212,11 @@ public class DeleteUsers extends javax.swing.JFrame {
                          mainClass = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[4]/div/div/div[2]/div/div[2]/div[2]/div[2]/div["+sum+"]"));
 
                     }
-                    JavascriptExecutor js = (JavascriptExecutor)open;
-                    js.executeScript("scrollBy(0,90)");
-                    delay(150);
+                    
+                   
                      WebElement subClass = mainClass.findElement(By.xpath("//*[@id=\"page-container\"]/div[4]/div/div/div[2]/div/div[2]/div[2]/div[2]/div["+sum+"]/div["+index+"]"));
+                     delay(150);
+                     ((JavascriptExecutor) open).executeScript("arguments[0].scrollIntoView(true);", subClass);
                      index++;
 
                     if(subClass.findElements(By.className("FollowStatus")).size() == 0)
@@ -273,7 +255,6 @@ public class DeleteUsers extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextPane jTextPane1;

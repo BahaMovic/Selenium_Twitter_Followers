@@ -13,11 +13,17 @@ import java.io.IOException;
  */
 public class TwitterAPI {
 
+    public TwitterAPI() throws IOException
+    {
+        main sh = new main();
+        sh.show();
+    }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
+        System.out.println("Hello world this is installation test");
         main sh = new main();
         sh.show();
     }

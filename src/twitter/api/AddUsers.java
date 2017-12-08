@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 
 /**
  *
@@ -29,6 +30,9 @@ public class AddUsers extends javax.swing.JFrame {
      */
     private String Email;
     private String Password;
+    private int numOfFollowers;
+    private String[] multEmail;
+    private String[] multPassword;
     public AddUsers() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -37,12 +41,25 @@ public class AddUsers extends javax.swing.JFrame {
     }
 
    
-    public void setData(String Email , String password ,String Url)
+    public void setData(String Email , String password ,String Url ,int numOfFollowers)
     {
         this.Email = Email;
         this.Password = password;
         this.Url = Url;
+        this.numOfFollowers = numOfFollowers;
         jTextPane1.setText(this.Email);
+        this.addUsers();
+        
+    }
+    
+       public void setData(String[] Email , String[] password ,String Url ,int numOfFollowers)
+    {
+        this.multEmail = Email;
+        this.multPassword = password;
+        this.Url = Url;
+        this.numOfFollowers = numOfFollowers;
+        jTextPane1.setText(this.Email);
+        this.addMultiUsers();
         
     }
     
@@ -60,7 +77,6 @@ public class AddUsers extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextPane1 = new javax.swing.JTextPane();
-        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -85,13 +101,6 @@ public class AddUsers extends javax.swing.JFrame {
 
         jScrollPane2.setViewportView(jTextPane1);
 
-        jButton2.setText("بدأ");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,10 +109,7 @@ public class AddUsers extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
@@ -115,9 +121,7 @@ public class AddUsers extends javax.swing.JFrame {
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14))
         );
 
@@ -138,19 +142,6 @@ public class AddUsers extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-         //this.jProgressBar1.setValue(50);
-       
-        //jProgressBar1 = new JProgressBar();
-        //jProgressBar1.setIndeterminate(true);
-        
-           // jProgressBar1.setValue(60);
-           
-          
-        this.addUsers();
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -195,7 +186,7 @@ public class AddUsers extends javax.swing.JFrame {
    public int sizeOfUsers;
    
    
-   
+   public int indexOfEmail = 0;
    
    
     private void addUsers()
@@ -221,23 +212,40 @@ public class AddUsers extends javax.swing.JFrame {
         open.get(Url);
         System.out.println("0 exception Error");
         mainClass = open.findElement(By.className("GridTimeline-items"));
+        String sizeof = "";
         System.out.println("First exception Error");
-        String sizeof = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[1]/div/div[2]/div/div/div[2]/div/div/ul/li[3]/a/span[3]")).getText();
+        try
+        {
+             sizeof = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[1]/div/div[2]/div/div/div[2]/div/div/ul/li[3]/a/span[3]")).getText();
+        }
+        catch(Exception wr)
+        {
+            sizeof = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[1]/div/div[2]/div/div/div[2]/div/div/ul/li[2]/a/span[3]")).getText();
+
+        }
+        System.out.println("The Size of users is "+sizeof);
         if(sizeof.charAt(sizeof.length()-1) == 'K')
         {
           sizeOfUsers = 1000;
         }
         else
         {
-          sizeOfUsers = Integer.parseInt(sizeof);
+            try{
+                sizeOfUsers = Integer.parseInt(sizeof);
+            }catch(Exception ex)
+            {
+                sizeOfUsers = 1000;
+            }
 
         }
         System.out.println("Second exception Error");
         System.out.println(sizeOfUsers);
         int mainDiv = 1;
         int subDiv = 1;
-        for (int i = 1 ; i < sizeOfUsers ;)
+        int counter = 0;
+        for (int i = 1 ; i < sizeOfUsers ; i++)
         {
+            
              System.out.println("Div = "+mainDiv+"  Element = "+subDiv + " i = "+i);
             if(i%6 == 0)
             {
@@ -245,27 +253,37 @@ public class AddUsers extends javax.swing.JFrame {
                 subDiv = 0;
             }
             subDiv += 1;
-            JavascriptExecutor js = (JavascriptExecutor)open;
-            js.executeScript("scrollBy(0,100)");
-            delay(200);
+            //JavascriptExecutor js = (JavascriptExecutor)open;
+            //js.executeScript("scrollBy(0,120)");
+            
             try{
+                
+    
                 WebElement subClass = mainClass.findElement(By.xpath("//*[@id=\"page-container\"]/div[2]/div/div/div[2]/div/div[2]/div[2]/div[2]/div["+mainDiv+"]/div["+subDiv+"]"));
-                    System.out.println(subClass.findElement(By.className("fullname ")).getText());
+                ((JavascriptExecutor) open).executeScript("arguments[0].scrollIntoView(true);", subClass);
+                 delay(200);
+                System.out.println(subClass.findElement(By.className("fullname ")).getText());
                 if(isProbablyArabic(subClass.findElement(By.className("fullname ")).getText()) || isProbablyArabic(subClass.findElement(By.className("ProfileCard-bio")).getText()))
                 {
-                    i++;
+                   
                     System.out.println("/////// AR "+subClass.findElement(By.className("fullname ")).getText());
                     subClass.findElement(By.xpath("//*[@id=\"stream-item-user-"+subClass.findElement(By.className("js-stream-item")).getAttribute("data-item-id")+"\"]/div/div/div[1]/div/div/div/span[2]/button[1]")).click();
                     mass += subClass.findElement(By.className("fullname ")).getText()+" Has been Added\n";
                     jTextPane1.setText(mass);
                     jProgressBar1.setValue(i);
+                    counter++;
                     delay(100);
                 }
             }
             catch(Exception ex)
             {
                 
-                delay(200);
+                delay(200);delay(200);
+            }
+            
+            if(counter >= numOfFollowers)
+            {
+                break;
             }
             
            
@@ -276,6 +294,121 @@ public class AddUsers extends javax.swing.JFrame {
             }
         }.execute();
        
+    }
+    
+       private void addMultiUsers()
+    {
+        
+
+        
+     
+     new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+      for( indexOfEmail = 0 ; indexOfEmail < multEmail.length ; indexOfEmail++)
+     {
+           ChromeOptions options = new ChromeOptions();
+           options.addArguments("--headless");
+        open = new ChromeDriver(options);
+
+        System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"\\chromedriver.exe");
+        open.get("https://mobile.twitter.com/login");
+        
+        
+        open.findElement(By.name("session[username_or_email]")).sendKeys(multEmail[indexOfEmail]);
+        open.findElement(By.name("session[password]")).sendKeys(multPassword[indexOfEmail]);
+        open.findElement(By.name("session[password]")).submit();
+        open.get(Url);
+        delay(2000);
+       
+        System.out.println("0 exception Error");
+        mainClass = open.findElement(By.className("GridTimeline-items"));
+        String sizeof = "";
+        System.out.println("First exception Error");
+        try
+        {
+             sizeof = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[1]/div/div[2]/div/div/div[2]/div/div/ul/li[3]/a/span[3]")).getText();
+        }
+        catch(Exception wr)
+        {
+            sizeof = open.findElement(By.xpath("//*[@id=\"page-container\"]/div[1]/div/div[2]/div/div/div[2]/div/div/ul/li[2]/a/span[3]")).getText();
+
+        }
+        System.out.println("The Size of users is "+sizeof);
+        if(sizeof.charAt(sizeof.length()-1) == 'K')
+        {
+          sizeOfUsers = 1000;
+        }
+        else
+        {
+            try{
+                sizeOfUsers = Integer.parseInt(sizeof);
+            }catch(Exception ex)
+            {
+                sizeOfUsers = 1000;
+            }
+
+        }
+        System.out.println("Second exception Error");
+        System.out.println(sizeOfUsers);
+        int mainDiv = 1;
+        int subDiv = 1;
+        int counter = 0;
+        for (int i = 1 ; i < 1000 ; i++)
+        {
+            
+             System.out.println("Div = "+mainDiv+"  Element = "+subDiv + " i = "+i);
+            if(i%6 == 0)
+            {
+                mainDiv += 1;
+                subDiv = 0;
+            }
+            subDiv += 1;
+            //JavascriptExecutor js = (JavascriptExecutor)open;
+            //js.executeScript("scrollBy(0,120)");
+            
+            try{
+                
+    
+                WebElement subClass = mainClass.findElement(By.xpath("//*[@id=\"page-container\"]/div[2]/div/div/div[2]/div/div[2]/div[2]/div[2]/div["+mainDiv+"]/div["+subDiv+"]"));
+                ((JavascriptExecutor) open).executeScript("arguments[0].scrollIntoView(true);", subClass);
+                 delay(200);
+                System.out.println(subClass.findElement(By.className("fullname ")).getText());
+                if(isProbablyArabic(subClass.findElement(By.className("fullname ")).getText()) || isProbablyArabic(subClass.findElement(By.className("ProfileCard-bio")).getText()))
+                {
+                   
+                    System.out.println("/////// AR "+subClass.findElement(By.className("fullname ")).getText());
+                    subClass.findElement(By.xpath("//*[@id=\"stream-item-user-"+subClass.findElement(By.className("js-stream-item")).getAttribute("data-item-id")+"\"]/div/div/div[1]/div/div/div/span[2]/button[1]")).click();
+                    mass += subClass.findElement(By.className("fullname ")).getText()+" Has been Added\n";
+                    jTextPane1.setText(mass);
+                    jProgressBar1.setValue(i);
+                    counter++;
+                    delay(100);
+                    if(counter >= numOfFollowers)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                
+                delay(200);delay(200);
+            }
+            
+            
+            
+           
+        }
+        open.close();
+         
+            }
+            return null;
+            }
+            
+        }.execute();
+     
+     
     }
     
     public static boolean isProbablyArabic(String s) {
@@ -302,7 +435,6 @@ public class AddUsers extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextPane jTextPane1;
